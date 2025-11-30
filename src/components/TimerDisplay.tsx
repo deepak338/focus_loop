@@ -57,7 +57,14 @@ export const TimerDisplay: React.FC<TimerDisplayProps> = ({ timeLeft, totalTime,
                 </svg>
                 <div className="timer-text-overlay">
                     <div className="timer-mode-label">{getModeLabel()}</div>
-                    <div className="timer-time">{formatTime(timeLeft)}</div>
+                    <div
+                        className="timer-time"
+                        style={{
+                            fontSize: formatTime(timeLeft).length > 7 ? '2.5rem' : (formatTime(timeLeft).length > 5 ? '3rem' : '4rem')
+                        }}
+                    >
+                        {formatTime(timeLeft)}
+                    </div>
                 </div>
             </div>
         </div>
