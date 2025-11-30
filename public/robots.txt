@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://focus-loop-4ftan1erq-deepaks-projects-d72c4600.vercel.app/sitemap.xml
