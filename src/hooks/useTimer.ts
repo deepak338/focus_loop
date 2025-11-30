@@ -160,7 +160,8 @@ export const useTimer = () => {
                 }
             }
         }
-    }, [settings, mode, isActive]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [settings, mode]);
 
     // Dynamic Title
     useEffect(() => {
