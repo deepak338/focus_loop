@@ -68,11 +68,15 @@ export const useTimer = () => {
         playNotificationSound();
 
         // Send notification
-        if (Notification.permission === 'granted') {
-            new Notification('Focus Loop', {
-                body: `${mode === 'work' ? 'Focus session' : (mode === 'custom' ? 'Timer' : 'Break')} complete!`,
-                icon: '/logo.svg' // Fallback icon
-            });
+        try {
+            if ('Notification' in window && Notification.permission === 'granted') {
+                new Notification('Focus Loop', {
+                    body: `${mode === 'work' ? 'Focus session' : (mode === 'custom' ? 'Timer' : 'Break')} complete!`,
+                    icon: '/logo.svg' // Fallback icon
+                });
+            }
+        } catch (e) {
+            console.error('Notification failed', e);
         }
 
         let nextMode: TimerMode = mode;

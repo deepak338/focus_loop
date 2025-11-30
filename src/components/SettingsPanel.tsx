@@ -70,6 +70,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                             type="number"
                                             value={Math.floor(localSettings.workDuration / 60)}
                                             onChange={(e) => handleChange('workDuration', Math.max(0, Number(e.target.value)) * 60)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                                             min="1"
                                         />
                                     </label>
@@ -79,6 +80,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                             type="number"
                                             value={Math.floor(localSettings.breakDuration / 60)}
                                             onChange={(e) => handleChange('breakDuration', Math.max(0, Number(e.target.value)) * 60)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                                             min="1"
                                         />
                                     </label>
@@ -88,6 +90,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                             type="number"
                                             value={Math.floor(localSettings.longBreakDuration / 60)}
                                             onChange={(e) => handleChange('longBreakDuration', Math.max(0, Number(e.target.value)) * 60)}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                                             min="1"
                                         />
                                     </label>
@@ -103,6 +106,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                             type="number"
                                             value={localSettings.longBreakInterval}
                                             onChange={(e) => handleChange('longBreakInterval', Math.max(1, Number(e.target.value)))}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                                             min="1"
                                         />
                                     </label>
@@ -112,6 +116,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                             type="number"
                                             value={localSettings.loopLimit}
                                             onChange={(e) => handleChange('loopLimit', Math.max(0, Number(e.target.value)))}
+                                            onKeyDown={(e) => e.key === 'Enter' && handleSave()}
                                             min="0"
                                         />
                                     </label>
@@ -147,6 +152,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                 <CustomTimerInput
                                     totalSeconds={localSettings.customDuration}
                                     onChange={(val) => handleChange('customDuration', val)}
+                                    onEnter={handleSave}
                                 />
                             </div>
                             <div className="toggle-row">

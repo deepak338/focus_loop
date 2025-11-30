@@ -3,9 +3,10 @@ import React, { useEffect, useState } from 'react';
 interface CustomTimerInputProps {
     totalSeconds: number;
     onChange: (seconds: number) => void;
+    onEnter?: () => void;
 }
 
-export const CustomTimerInput: React.FC<CustomTimerInputProps> = ({ totalSeconds, onChange }) => {
+export const CustomTimerInput: React.FC<CustomTimerInputProps> = ({ totalSeconds, onChange, onEnter }) => {
     const [hours, setHours] = useState(0);
     const [minutes, setMinutes] = useState(0);
     const [seconds, setSeconds] = useState(0);
@@ -32,6 +33,12 @@ export const CustomTimerInput: React.FC<CustomTimerInputProps> = ({ totalSeconds
         onChange(total);
     };
 
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === 'Enter' && onEnter) {
+            onEnter();
+        }
+    };
+
     return (
         <div className="custom-timer-input">
             <div className="time-field">
@@ -41,6 +48,7 @@ export const CustomTimerInput: React.FC<CustomTimerInputProps> = ({ totalSeconds
                     min="0"
                     value={hours}
                     onChange={(e) => handleChange('h', Number(e.target.value))}
+                    onKeyDown={handleKeyDown}
                 />
             </div>
             <span className="separator">:</span>
@@ -52,6 +60,7 @@ export const CustomTimerInput: React.FC<CustomTimerInputProps> = ({ totalSeconds
                     max="59"
                     value={minutes}
                     onChange={(e) => handleChange('m', Number(e.target.value))}
+                    onKeyDown={handleKeyDown}
                 />
             </div>
             <span className="separator">:</span>
@@ -63,6 +72,7 @@ export const CustomTimerInput: React.FC<CustomTimerInputProps> = ({ totalSeconds
                     max="59"
                     value={seconds}
                     onChange={(e) => handleChange('s', Number(e.target.value))}
+                    onKeyDown={handleKeyDown}
                 />
             </div>
         </div>
