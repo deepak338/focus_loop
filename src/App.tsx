@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, Maximize, Minimize, User, LogOut } from 'lucide-react';
+import { Settings as SettingsIcon, Maximize, Minimize, User, LogOut, HelpCircle } from 'lucide-react';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTimer } from './hooks/useTimer';
@@ -9,6 +9,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { ThemeToggle } from './components/ThemeToggle';
 import { AuthModal } from './components/AuthModal';
 import { ModeSwitcher } from './components/ModeSwitcher';
+import { HelpModal } from './components/HelpModal';
 import './index.css';
 
 const FocusLoop: React.FC = () => {
@@ -27,6 +28,7 @@ const FocusLoop: React.FC = () => {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
   const toggleFullscreen = () => {
@@ -83,6 +85,14 @@ const FocusLoop: React.FC = () => {
           )}
 
           <button
+            className="settings-btn"
+            onClick={() => setIsHelpOpen(true)}
+            title="Help & Info"
+          >
+            <HelpCircle size={20} />
+          </button>
+
+          <button
             className="theme-toggle-btn"
             onClick={toggleFullscreen}
             title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
@@ -136,6 +146,11 @@ const FocusLoop: React.FC = () => {
       <AuthModal
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
+      />
+
+      <HelpModal
+        isOpen={isHelpOpen}
+        onClose={() => setIsHelpOpen(false)}
       />
     </div>
   );
