@@ -1,5 +1,5 @@
-import React from 'react';
-import { X } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { X, Save } from 'lucide-react';
 import { useSettings } from '../context/SettingsContext';
 import { CustomTimerInput } from './CustomTimerInput';
 
@@ -10,11 +10,42 @@ interface SettingsPanelProps {
 
 export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose }) => {
     const { settings, updateSettings } = useSettings();
+    const [localSettings, setLocalSettings] = useState(settings);
+    const [error, setError] = useState<string | null>(null);
+
+    // Sync local state when panel opens or settings change externally
+    useEffect(() => {
+        if (isOpen) {
+            setLocalSettings(settings);
+            setError(null);
+        }
+    }, [isOpen, settings]);
 
     if (!isOpen) return null;
 
     const handleChange = (key: keyof typeof settings, value: any) => {
-        updateSettings({ [key]: value });
+        setLocalSettings(prev => ({ ...prev, [key]: value }));
+        setError(null);
+    };
+
+    const handleSave = () => {
+        // Validation
+        if (localSettings.timerMode === 'pomodoro') {
+            if (localSettings.workDuration <= 0 ||
+                localSettings.breakDuration <= 0 ||
+                localSettings.longBreakDuration <= 0) {
+                setError('All durations must be greater than 0');
+                return;
+            }
+        } else {
+            if (localSettings.customDuration <= 0) {
+                setError('Duration must be greater than 0');
+                return;
+            }
+        }
+
+        updateSettings(localSettings);
+        onClose();
     };
 
     return (
@@ -28,7 +59,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                 </div>
 
                 <div className="settings-content">
-                    {settings.timerMode === 'pomodoro' ? (
+                    {localSettings.timerMode === 'pomodoro' ? (
                         <>
                             <div className="setting-group">
                                 <h3>Timer Durations (minutes)</h3>
@@ -37,8 +68,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         Focus
                                         <input
                                             type="number"
-                                            value={settings.workDuration / 60}
-                                            onChange={(e) => handleChange('workDuration', Number(e.target.value) * 60)}
+                                            value={Math.floor(localSettings.workDuration / 60)}
+                                            onChange={(e) => handleChange('workDuration', Math.max(0, Number(e.target.value)) * 60)}
                                             min="1"
                                         />
                                     </label>
@@ -46,8 +77,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         Short Break
                                         <input
                                             type="number"
-                                            value={settings.breakDuration / 60}
-                                            onChange={(e) => handleChange('breakDuration', Number(e.target.value) * 60)}
+                                            value={Math.floor(localSettings.breakDuration / 60)}
+                                            onChange={(e) => handleChange('breakDuration', Math.max(0, Number(e.target.value)) * 60)}
                                             min="1"
                                         />
                                     </label>
@@ -55,8 +86,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         Long Break
                                         <input
                                             type="number"
-                                            value={settings.longBreakDuration / 60}
-                                            onChange={(e) => handleChange('longBreakDuration', Number(e.target.value) * 60)}
+                                            value={Math.floor(localSettings.longBreakDuration / 60)}
+                                            onChange={(e) => handleChange('longBreakDuration', Math.max(0, Number(e.target.value)) * 60)}
                                             min="1"
                                         />
                                     </label>
@@ -70,8 +101,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         Long Break Interval
                                         <input
                                             type="number"
-                                            value={settings.longBreakInterval}
-                                            onChange={(e) => handleChange('longBreakInterval', Number(e.target.value))}
+                                            value={localSettings.longBreakInterval}
+                                            onChange={(e) => handleChange('longBreakInterval', Math.max(1, Number(e.target.value)))}
                                             min="1"
                                         />
                                     </label>
@@ -79,8 +110,8 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         Loop Limit (0 = Infinite)
                                         <input
                                             type="number"
-                                            value={settings.loopLimit}
-                                            onChange={(e) => handleChange('loopLimit', Number(e.target.value))}
+                                            value={localSettings.loopLimit}
+                                            onChange={(e) => handleChange('loopLimit', Math.max(0, Number(e.target.value)))}
                                             min="0"
                                         />
                                     </label>
@@ -94,7 +125,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         <span>Auto-start Breaks</span>
                                         <input
                                             type="checkbox"
-                                            checked={settings.autoStartBreaks}
+                                            checked={localSettings.autoStartBreaks}
                                             onChange={(e) => handleChange('autoStartBreaks', e.target.checked)}
                                         />
                                     </label>
@@ -102,7 +133,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                         <span>Auto-start Focus</span>
                                         <input
                                             type="checkbox"
-                                            checked={settings.autoStartWork}
+                                            checked={localSettings.autoStartWork}
                                             onChange={(e) => handleChange('autoStartWork', e.target.checked)}
                                         />
                                     </label>
@@ -114,7 +145,7 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                             <h3>Custom Timer</h3>
                             <div style={{ marginBottom: '1.5rem' }}>
                                 <CustomTimerInput
-                                    totalSeconds={settings.customDuration}
+                                    totalSeconds={localSettings.customDuration}
                                     onChange={(val) => handleChange('customDuration', val)}
                                 />
                             </div>
@@ -123,13 +154,38 @@ export const SettingsPanel: React.FC<SettingsPanelProps> = ({ isOpen, onClose })
                                     <span>Loop Timer</span>
                                     <input
                                         type="checkbox"
-                                        checked={settings.customLoop}
+                                        checked={localSettings.customLoop}
                                         onChange={(e) => handleChange('customLoop', e.target.checked)}
                                     />
                                 </label>
                             </div>
                         </div>
                     )}
+
+                    {error && <div className="error-message" style={{ color: 'var(--accent-color)', marginBottom: '1rem' }}>{error}</div>}
+
+                    <div className="settings-footer" style={{ marginTop: '2rem', display: 'flex', justifyContent: 'flex-end' }}>
+                        <button
+                            className="save-btn"
+                            onClick={handleSave}
+                            style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '0.5rem',
+                                padding: '0.75rem 1.5rem',
+                                backgroundColor: 'var(--accent-color)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '8px',
+                                fontSize: '1rem',
+                                cursor: 'pointer',
+                                fontWeight: 500
+                            }}
+                        >
+                            <Save size={20} />
+                            Save Settings
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
