@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, Maximize, Minimize, HelpCircle } from 'lucide-react';
+import { Settings as SettingsIcon, HelpCircle, Coffee } from 'lucide-react';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
 import { useTimer } from './hooks/useTimer';
 import { TimerDisplay } from './components/TimerDisplay';
@@ -9,6 +9,8 @@ import { ThemeToggle } from './components/ThemeToggle';
 import { ModeSwitcher } from './components/ModeSwitcher';
 import { HelpModal } from './components/HelpModal';
 import { ConsentBanner } from './components/ConsentBanner';
+import { CoffeeButton } from './components/CoffeeButton';
+import { PolicyModal, PrivacyPolicy, TermsOfService, RefundPolicy } from './components/PolicyModals';
 import './index.css';
 
 const FocusLoop: React.FC = () => {
@@ -26,19 +28,9 @@ const FocusLoop: React.FC = () => {
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isCoffeeOpen, setIsCoffeeOpen] = useState(false);
+  const [policyModal, setPolicyModal] = useState<'privacy' | 'terms' | 'refund' | null>(null);
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      if (document.exitFullscreen) {
-        document.exitFullscreen();
-        setIsFullscreen(false);
-      }
-    }
-  };
 
   const getTotalTime = () => {
     if (mode === 'custom') return settings.customDuration;
@@ -58,6 +50,23 @@ const FocusLoop: React.FC = () => {
           <h1 className="app-title">Focus Loop</h1>
         </div>
         <div className="header-controls">
+          <button
+            className="settings-btn"
+            onClick={() => setIsSettingsOpen(true)}
+            title="Settings"
+          >
+            <SettingsIcon size={20} />
+          </button>
+
+          <button
+            className="coffee-btn-header"
+            onClick={() => setIsCoffeeOpen(true)}
+          >
+            <Coffee size={18} />
+            <span>Buy me a coffee</span>
+          </button>
+
+          <ThemeToggle />
 
           <button
             className="settings-btn"
@@ -65,22 +74,6 @@ const FocusLoop: React.FC = () => {
             title="Help & Info"
           >
             <HelpCircle size={20} />
-          </button>
-
-          <button
-            className="theme-toggle-btn"
-            onClick={toggleFullscreen}
-            title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}
-          >
-            {isFullscreen ? <Minimize size={20} /> : <Maximize size={20} />}
-          </button>
-          <ThemeToggle />
-          <button
-            className="settings-btn"
-            onClick={() => setIsSettingsOpen(true)}
-            title="Settings"
-          >
-            <SettingsIcon size={20} />
           </button>
         </div>
       </header>
@@ -124,6 +117,43 @@ const FocusLoop: React.FC = () => {
       />
 
       <ConsentBanner />
+
+      {isCoffeeOpen && (
+        <CoffeeButton onClose={() => setIsCoffeeOpen(false)} />
+      )}
+
+      <PolicyModal
+        isOpen={policyModal === 'privacy'}
+        onClose={() => setPolicyModal(null)}
+        title="Privacy Policy"
+      >
+        <PrivacyPolicy />
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={policyModal === 'terms'}
+        onClose={() => setPolicyModal(null)}
+        title="Terms of Service"
+      >
+        <TermsOfService />
+      </PolicyModal>
+
+      <PolicyModal
+        isOpen={policyModal === 'refund'}
+        onClose={() => setPolicyModal(null)}
+        title="Refund Policy"
+      >
+        <RefundPolicy />
+      </PolicyModal>
+
+      <footer className="app-footer">
+        <div className="footer-links">
+          <span className="footer-link" onClick={() => setPolicyModal('privacy')}>Privacy Policy</span>
+          <span className="footer-link" onClick={() => setPolicyModal('terms')}>Terms of Service</span>
+          <span className="footer-link" onClick={() => setPolicyModal('refund')}>Refund Policy</span>
+        </div>
+        <p>© 2024 Focus Loop. All rights reserved.</p>
+      </footer>
     </div>
   );
 };
