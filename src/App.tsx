@@ -1,20 +1,17 @@
 import React, { useState } from 'react';
-import { Settings as SettingsIcon, Maximize, Minimize, User, LogOut, HelpCircle } from 'lucide-react';
+import { Settings as SettingsIcon, Maximize, Minimize, HelpCircle } from 'lucide-react';
 import { SettingsProvider, useSettings } from './context/SettingsContext';
-import { AuthProvider, useAuth } from './context/AuthContext';
 import { useTimer } from './hooks/useTimer';
 import { TimerDisplay } from './components/TimerDisplay';
 import { Controls } from './components/Controls';
 import { SettingsPanel } from './components/SettingsPanel';
 import { ThemeToggle } from './components/ThemeToggle';
-import { AuthModal } from './components/AuthModal';
 import { ModeSwitcher } from './components/ModeSwitcher';
 import { HelpModal } from './components/HelpModal';
 import './index.css';
 
 const FocusLoop: React.FC = () => {
   const { settings } = useSettings();
-  const { session, signOut } = useAuth();
   const {
     timeLeft,
     isActive,
@@ -27,7 +24,6 @@ const FocusLoop: React.FC = () => {
   } = useTimer();
 
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
-  const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isHelpOpen, setIsHelpOpen] = useState(false);
   const [isFullscreen, setIsFullscreen] = useState(false);
 
@@ -61,28 +57,6 @@ const FocusLoop: React.FC = () => {
           <h1 className="app-title">Focus Loop</h1>
         </div>
         <div className="header-controls">
-          {session ? (
-            <div className="user-menu">
-              <div className="user-avatar" title={session.user.email}>
-                {session.user.email?.[0].toUpperCase()}
-              </div>
-              <button
-                className="settings-btn"
-                onClick={() => signOut()}
-                title="Sign Out"
-              >
-                <LogOut size={20} />
-              </button>
-            </div>
-          ) : (
-            <button
-              className="settings-btn"
-              onClick={() => setIsAuthOpen(true)}
-              title="Sign In"
-            >
-              <User size={20} />
-            </button>
-          )}
 
           <button
             className="settings-btn"
@@ -143,11 +117,6 @@ const FocusLoop: React.FC = () => {
         onClose={() => setIsSettingsOpen(false)}
       />
 
-      <AuthModal
-        isOpen={isAuthOpen}
-        onClose={() => setIsAuthOpen(false)}
-      />
-
       <HelpModal
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
@@ -158,11 +127,9 @@ const FocusLoop: React.FC = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <SettingsProvider>
-        <FocusLoop />
-      </SettingsProvider>
-    </AuthProvider>
+    <SettingsProvider>
+      <FocusLoop />
+    </SettingsProvider>
   );
 }
 
