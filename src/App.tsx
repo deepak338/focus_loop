@@ -8,6 +8,7 @@ import { SettingsPanel } from './components/SettingsPanel';
 import { ThemeToggle } from './components/ThemeToggle';
 import { ModeSwitcher } from './components/ModeSwitcher';
 import { HelpModal } from './components/HelpModal';
+import { ConsentBanner } from './components/ConsentBanner';
 import './index.css';
 
 const FocusLoop: React.FC = () => {
@@ -121,6 +122,8 @@ const FocusLoop: React.FC = () => {
         isOpen={isHelpOpen}
         onClose={() => setIsHelpOpen(false)}
       />
+
+      <ConsentBanner />
     </div>
   );
 };

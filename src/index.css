@@ -534,11 +534,65 @@ body {
   width: 2rem;
   height: 2rem;
   border-radius: 50%;
+  color: var(--text-primary);
+}
+
+.consent-content {
+  margin-bottom: 1.5rem;
+}
+
+.consent-content p {
+  margin: 0;
+  line-height: 1.5;
+  color: var(--text-primary);
+}
+
+.consent-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+
+.consent-btn {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 1rem;
+}
+
+.consent-btn-primary {
   background-color: var(--accent-work);
   color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-weight: 600;
-  font-size: 0.875rem;
+}
+
+.consent-btn-primary:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.consent-btn-secondary {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+.consent-btn-secondary:hover {
+  background-color: var(--border-color);
+}
+
+@media (max-width: 640px) {
+  .consent-banner {
+    padding: 1rem;
+  }
+
+  .consent-actions {
+    flex-direction: column;
+  }
+
+  .consent-btn {
+    width: 100%;
+  }
 }
