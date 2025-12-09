@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Cookie, Shield, Check, X } from 'lucide-react';
 
 interface ConsentBannerProps {
     onConsentChange?: (hasConsent: boolean) => void;
@@ -43,34 +44,47 @@ export const ConsentBanner: React.FC<ConsentBannerProps> = ({ onConsentChange })
     return (
         <div className="consent-overlay">
             <div className="consent-banner">
-                <div className="consent-header">
-                    <h3>Cookie Consent</h3>
-                </div>
+                <div className="consent-banner-inner">
+                    <div className="consent-icon-header">
+                        <div className="consent-icon-wrapper">
+                            <Cookie size={28} strokeWidth={2} />
+                        </div>
+                        <h3 className="consent-title">Cookie Preferences</h3>
+                    </div>
 
-                <div className="consent-content">
-                    <p>
-                        We use cookies and similar technologies to provide personalized content and ads.
-                        By clicking "Accept", you consent to the use of cookies for analytics and personalized advertising.
-                    </p>
-                    <p style={{ fontSize: '0.875rem', color: 'var(--text-secondary)', marginTop: '0.5rem' }}>
-                        You can change your preferences at any time. For users in the EEA, UK, and Switzerland,
-                        we comply with GDPR and TCF v2.2 standards.
-                    </p>
-                </div>
+                    <div className="consent-content">
+                        <p className="consent-description">
+                            We use cookies to enhance your experience and show personalized ads.
+                            Your privacy matters to us.
+                        </p>
+                        <div className="consent-features">
+                            <div className="consent-feature">
+                                <Shield size={16} />
+                                <span>GDPR Compliant</span>
+                            </div>
+                            <div className="consent-feature">
+                                <Cookie size={16} />
+                                <span>Personalized Experience</span>
+                            </div>
+                        </div>
+                    </div>
 
-                <div className="consent-actions">
-                    <button
-                        onClick={handleReject}
-                        className="consent-btn consent-btn-secondary"
-                    >
-                        Reject
-                    </button>
-                    <button
-                        onClick={handleAccept}
-                        className="consent-btn consent-btn-primary"
-                    >
-                        Accept
-                    </button>
+                    <div className="consent-actions">
+                        <button
+                            onClick={handleReject}
+                            className="consent-btn consent-btn-secondary"
+                        >
+                            <X size={18} />
+                            Decline
+                        </button>
+                        <button
+                            onClick={handleAccept}
+                            className="consent-btn consent-btn-primary"
+                        >
+                            <Check size={18} />
+                            Accept All
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
