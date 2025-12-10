@@ -11,6 +11,7 @@ import { HelpModal } from './components/HelpModal';
 import { ConsentBanner } from './components/ConsentBanner';
 import { CoffeeButton } from './components/CoffeeButton';
 import { PolicyModal, PrivacyPolicy, TermsOfService, RefundPolicy } from './components/PolicyModals';
+import { InfoSection } from './components/InfoSection';
 import './index.css';
 
 const FocusLoop: React.FC = () => {
@@ -146,11 +147,13 @@ const FocusLoop: React.FC = () => {
         <RefundPolicy />
       </PolicyModal>
 
+      <InfoSection />
+
       <footer className="app-footer">
         <div className="footer-links">
-          <span className="footer-link" onClick={() => setPolicyModal('privacy')}>Privacy Policy</span>
-          <span className="footer-link" onClick={() => setPolicyModal('terms')}>Terms of Service</span>
-          <span className="footer-link" onClick={() => setPolicyModal('refund')}>Refund Policy</span>
+          <a href="/privacy.html" className="footer-link">Privacy Policy</a>
+          <a href="/terms.html" className="footer-link">Terms of Service</a>
+          <a href="/refund.html" className="footer-link">Refund Policy</a>
         </div>
         <p>© 2024 Focus Loop. All rights reserved.</p>
       </footer>
